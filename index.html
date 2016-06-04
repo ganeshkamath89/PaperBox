@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style>
+		#test {
+			width: 100px;
+			height:100px;
+			margin: 0px auto;
+		}
+		</style>
+		<script type="text/javascript" src="paper-full.js"></script>
+		<script type="text/paperscript" canvas="myCanvas">
+			yOffset = 0;
+			minX = 100;
+			minY = 100;
+			maxX = 0;
+			maxY = 0;
+			data = [
+				{ name: "Agartala", description: "Capital of Tripura", x: 23.50, y: 91.16 },
+				{ name: "Agra", description: "Capital of Uttar Pradesh", x: 27.11, y: 78.01 },
+				{ name: "Ahmedabad", description: "Capital of Gujarat", x: 23.02, y: 72.35 },
+				{ name: "Amritsar", description: "Capital of Punjab", x: 31.38, y: 74.52 },
+				{ name: "Bangalore", description: "Capital of Karnataka", x: 12.58, y: 77.34 },
+				{ name: "Chandigarh", description: "Union Territory", x: 30.45, y: 76.47 },
+				{ name: "Chennai (Madras)", description: "Capital of Tamil Nadu", x: 13.05, y: 80.16 },
+				{ name: "Dibrugarh", description: "Capital of Assam", x: 27.29, y: 95.00 },
+				{ name: "Gangtok", description: "Capital of Sikkim", x: 27.20, y: 88.37 },
+				{ name: "Guwahati", description: "Capital of Assam", x: 26.11, y: 91.44 },
+				{ name: "Hyderabad", description: "Capital of Andhra Pradesh", x: 17.22, y: 78.29 },
+				{ name: "Jaipur", description: "Capital of Rajasthan", x: 26.56, y: 75.49 },
+				{ name: "Kandla", description: "A popular tourist spot in Maharastra", x: 23.03, y: 70.11 },
+				{ name: "Kanpur", description: "Capital of Uttar Pradesh", x: 26.28, y: 80.20 },
+				{ name: "Kochi", description: "Capital of Kerala", x: 09.58, y: 76.17 },
+				{ name: "Kolkata (Calcutta)", description: "Capital of West Bengal", x: 22.34, y: 88.22 },
+				{ name: "Kulpahar", description: "Capital of Uttar Pradesh", x: 25.19, y: 79.38 },
+				{ name: "Lucknow", description: "Capital of Uttar Pradesh", x: 26.51, y: 80.57 },
+				{ name: "Ludhiana", description: "Capital of Punjab", x: 30.55, y: 75.51 },
+				{ name: "Mumbai (Bombay)", description: "Capital of Maharashtra", x: 18.59, y: 72.50 },
+				{ name: "Nagpur", description: "A popular city in Maharashtra", x: 21.08, y: 79.05 },
+				{ name: "New Delhi", description: "Capital of Delhi", x: 28.37, y: 77.13 },
+				{ name: "Patna", description: "Capital of Bihar", x: 25.37, y: 85.09 },
+				{ name: "Port Blair", description: "Capital of Andaman and Nicobar Islands", x: 11.40, y: 92.46 },
+				{ name: "Pune", description: "A popular city in Maharashtra", x: 18.31, y: 73.51 },
+				{ name: "Shillong", description: "Capital of Meghalaya", x: 25.34, y: 91.53 },
+				{ name: "Shimla", description: "Capital of Himachal Pradesh", x: 31.06, y: 77.10 },
+				{ name: "Siliguri", description: "Capital of West Bengal", x: 26.43, y: 88.26 },
+				{ name: "Srinagar", description: "Capital of Jammu and Kashmir", x: 34.05, y: 74.47 },
+				{ name: "Surat", description: "A popular city in Gujarat", x: 21.10, y: 72.50 },
+				{ name: "Tezpur", description: "Capital of Assam", x: 26.38, y: 92.48 },
+				{ name: "Trivandrum", description: "Capital of Kerala", x: 08.29, y: 76.57 },
+				{ name: "Visakhapatnam", description: "Capital of Andhra Pradesh", x: 17.41, y: 83.13 }
+			];
+			function myFunction(p1, p2) {
+				var myCircle = new Path.Circle(new Point(p1, p2), 1);
+				myCircle.fillColor = "#F7464A";
+				
+				if(minX > p1)minX = p1;
+				else if (maxX < p1) maxX = p1;
+				
+				if(minY > p2) minY = p2;
+				else if(maxY < p2) maxY = p2;
+			}
+			function drawRect() {
+				var rectangle = new Rectangle(new Point(minX - 5, minY - 5), new Point(maxX + 10, maxY + 10));
+				var p = new Path.Rectangle(rectangle);
+				p.selected = true;
+			}
+			function drawLine(p1,p2){
+				var path = new Path();
+				path.strokeColor = 'black';
+				path.moveTo(new Point(p1, p2));
+				path.lineTo(new Point(maxX + 20, minY + yOffset));
+				yOffset = yOffset + 1;
+			}
+			function draw() {
+				for (i = 0; i < data.length; i++) {
+					myFunction(data[i].x, data[i].y);
+				}
+				drawRect();
+				for (i = 0; i < data.length; i++) {
+					drawLine(data[i].x, data[i].y);
+				}
+			}
+			window.onload = draw();
+		</script>
+	</head>
+	<body>
+		<div id="test">
+			<canvas id="myCanvas" style="margin: 50px auto;"></canvas>
+		</div>
+	</body>
+</html>
