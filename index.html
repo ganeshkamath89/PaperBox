@@ -50,9 +50,17 @@
 				{ name: "Trivandrum", description: "Capital of Kerala", x: 08.29, y: 76.57 },
 				{ name: "Visakhapatnam", description: "Capital of Andhra Pradesh", x: 17.41, y: 83.13 }
 			];
+			function getRandomColor() {
+				var letters = '0123456789ABCDEF'.split('');
+				var color = '#';
+				for (var i = 0; i < 6; i++ ) {
+					color += letters[Math.floor(Math.random() * 16)];
+				}
+				return color;
+			}
 			function myFunction(p1, p2) {
 				var myCircle = new Path.Circle(new Point(p1, p2), 1);
-				myCircle.fillColor = "#F7464A";
+				myCircle.fillColor = getRandomColor() ;
 				
 				if(minX > p1)minX = p1;
 				else if (maxX < p1) maxX = p1;
@@ -60,8 +68,8 @@
 				if(minY > p2) minY = p2;
 				else if(maxY < p2) maxY = p2;
 			}
-			function drawRect() {
-				var rectangle = new Rectangle(new Point(minX - 5, minY - 5), new Point(maxX + 10, maxY + 10));
+			function drawRect(x1, y1, x2, y2) {
+				var rectangle = new Rectangle(new Point(x1, y1), new Point(x2, y2));
 				var p = new Path.Rectangle(rectangle);
 				p.selected = true;
 			}
@@ -76,7 +84,7 @@
 				for (i = 0; i < data.length; i++) {
 					myFunction(data[i].x, data[i].y);
 				}
-				drawRect();
+				drawRect(minX - 5, minY - 5, maxX + 10, maxY + 10);
 				for (i = 0; i < data.length; i++) {
 					drawLine(data[i].x, data[i].y);
 				}
