@@ -3,143 +3,195 @@
 	<head>
 		<script type="text/javascript" src="paper-full.js"></script>
 		<script type="text/paperscript" canvas="myCanvas">
-		rOffset = 0;
-		lOffset = 0;
-		bOffset = 0;
-		tOffset = 0;
-		minX = 100;
-		minY = 100;
-		maxX = 0;
-		maxY = 0;
-		data = [
-			{ y: 23.50, x: 91.16, name: "Agartala", description: "Capital of Tripura" },
-			{ y: 27.11, x: 78.01, name: "Agra", description: "A popular city in Uttar Pradesh" },
-			{ y: 23.02, x: 72.35, name: "Ahmedabad", description: "Capital of Gujarat" },
-			{ y: 31.38, x: 74.52, name: "Amritsar", description: "Capital of Punjab" },
-			{ y: 12.58, x: 77.34, name: "Bangalore", description: "Capital of Karnataka" },
-			{ y: 30.45, x: 76.47, name: "Chandigarh", description: "Union Territory" },
-			{ y: 13.05, x: 80.16, name: "Chennai (Madras)", description: "Capital of Tamil Nadu" },
-			{ y: 27.29, x: 95.00, name: "Dibrugarh", description: "A popular city in Assam" },
-			{ y: 27.20, x: 88.37, name: "Gangtok", description: "Capital of Sikkim" },
-			{ y: 26.11, x: 91.44, name: "Guwahati", description: "A popular city in Assam" },
-			{ y: 17.22, x: 78.29, name: "Hyderabad", description: "Capital of Andhra Pradesh" },
-			{ y: 26.56, x: 75.49, name: "Jaipur", description: "Capital of Rajasthan" },
-			{ y: 23.03, x: 70.11, name: "Kandla", description: "A popular tourist spot in Maharastra" },
-			{ y: 26.28, x: 80.20, name: "Kanpur", description: "A popular city in Uttar Pradesh" },
-			{ y: 09.58, x: 76.17, name: "Kochi", description: "Capital of Kerala" },
-			{ y: 22.34, x: 88.22, name: "Kolkata (Calcutta)", description: "Capital of West Bengal" },
-			{ y: 25.19, x: 79.38, name: "Kulpahar", description: "A popular city in Uttar Pradesh" },
-			{ y: 26.51, x: 80.57, name: "Lucknow", description: "Capital of Uttar Pradesh" },
-			{ y: 30.55, x: 75.51, name: "Ludhiana", description: "A popular city in Punjab" },
-			{ y: 18.59, x: 72.50, name: "Mumbai (Bombay)", description: "Capital of Maharashtra" },
-			{ y: 21.08, x: 79.05, name: "Nagpur", description: "A popular city in Maharashtra" },
-			{ y: 28.37, x: 77.13, name: "New Delhi", description: "Capital of Delhi" },
-			{ y: 25.37, x: 85.09, name: "Patna", description: "Capital of Bihar" },
-			{ y: 11.40, x: 92.46, name: "Port Blair", description: "Capital of Andaman and Nicobar Islands" },
-			{ y: 18.31, x: 73.51, name: "Pune", description: "A popular city in Maharashtra" },
-			{ y: 25.34, x: 91.53, name: "Shillong", description: "Capital of Meghalaya" },
-			{ y: 31.06, x: 77.10, name: "Shimla", description: "Capital of Himachal Pradesh" },
-			{ y: 26.43, x: 88.26, name: "Siliguri", description: "A popular city in West Bengal" },
-			{ y: 34.05, x: 74.47, name: "Srinagar", description: "Capital of Jammu and Kashmir" },
-			{ y: 21.10, x: 72.50, name: "Surat", description: "A popular city in Gujarat" },
-			{ y: 26.38, x: 92.48, name: "Tezpur", description: "Capital of Assam" },
-			{ y: 08.29, x: 76.57, name: "Trivandrum", description: "A popular city in Kerala" },
-			{ y: 17.41, x: 83.13, name: "Visakhapatnam", description: "A popular city in Andhra Pradesh" }
-		];
-		function findMinMax(x, y) {
-			if (minX > x) minX = x-1;
-			else if (maxX < x) maxX = x+1;
-			if (minY > y) minY = y-1;
-			else if (maxY < y) maxY = y+1;
-		}
-		function drawRect(x1, y1, x2, y2) {
-			var rectangle = new Rectangle(new Point(x1, y1), new Point(x2, y2));
-			var p = new Path.Rectangle(rectangle);
-			p.selected = true;
-		}
-		function drawLine(x, y) {
-			var myCircle = new Path.Circle(new Point(x, y), 1);
-			var path = new Path();
-			path.strokeColor = 'black';
-			path.moveTo(new Point(x, y));
-			if (ifInsideRightTriangle(x,y)) {
-				myCircle.fillColor = "red";
-				var endPoint = new Point(maxX + 20, minY + rOffset);
-				path.lineTo(endPoint);
-				drawRect(maxX + 20, minY + rOffset, maxX + 50, minY + rOffset);
-				rOffset = rOffset + 5;
-			} else if (ifInsideLeftTriangle(x,y)){
-				myCircle.fillColor = "blue";
-				path.lineTo(new Point(minX - 20, minY + lOffset));
-				drawRect(minX - 20, minY + lOffset, minX - 50, minY + lOffset);
-				lOffset = lOffset + 5;
-			} else if (ifInsideBottomTriangle(x,y)){
-				myCircle.fillColor = "green";
-				path.lineTo(new Point(minX + bOffset, maxY + 20));
-				drawRect(minX + bOffset, maxY + 20, minX + bOffset, maxY + 50);
-				bOffset = bOffset + 5;
-			} else {
-				myCircle.fillColor = "magenta";
-				path.lineTo(new Point(minX + tOffset, minY - 20));
-				drawRect(minX + tOffset, minY - 20, minX + tOffset, minY - 50);
-				tOffset = tOffset + 5;
-			}
-		}
-		function ifInsideRightTriangle(x, y) {
-			r = false;
-			trX = maxX; trY = minY; /*p1 - top right*/
-			brX = maxX; brY = maxY; /*p2 - bottom right*/
-			ceX = (minX + maxX) / 2; ceY = (minY + maxY) / 2; /*p3 - center point*/
+      rOffset = 0;
+      lOffset = 0;
+      bOffset = 0;
+      tOffset = 0;
+      minX = 100;
+      minY = 100;
+      maxX = 0;
+      maxY = 0;
 
-			alpha = calcAlpha(x, y, trX, trY, brX, brY, ceX, ceY);
-			beta = calcBeta(x, y, trX, trY, brX, brY, ceX, ceY);
-			gamma = 1 - alpha - beta;
-			if (alpha >= 0 && beta >= 0 && gamma >= 0)
-				r = true;
-			return r;
-		}
-		function ifInsideLeftTriangle(x, y) {
-			r = false;
-			tlX = minX; tlY = minY;
-			blX = minX; blY = maxY;
-			ceX = (minX + maxX) / 2; ceY = (minY + maxY) / 2; /*p3 - center point*/
+      dataRight = [];
+      dataLeft = [];
+      dataBottom = [];
+      dataTop = [];
 
-			alpha = calcAlpha(x, y, tlX, tlY, blX, blY, ceX, ceY);
-			beta = calcBeta(x, y, tlX, tlY, blX, blY, ceX, ceY);
-			gamma = 1 - alpha - beta;
-			if (alpha >= 0 && beta >= 0 && gamma >= 0)
-				r = true;
-			return r;
-		}
-		function ifInsideBottomTriangle(x, y) {
-			r = false;
-			blX = minX; blY = maxY;
-			brX = maxX; brY = maxY;
-			ceX = (minX + maxX) / 2; ceY = (minY + maxY) / 2; /*p3 - center point*/
+      data = [
+          { y: 23.50, x: 91.16, name: "Agartala", description: "Capital of Tripura" },
+          { y: 27.11, x: 78.01, name: "Agra", description: "A popular city in Uttar Pradesh" },
+          { y: 23.02, x: 72.35, name: "Ahmedabad", description: "Capital of Gujarat" },
+          { y: 31.38, x: 74.52, name: "Amritsar", description: "Capital of Punjab" },
+          { y: 12.58, x: 77.34, name: "Bangalore", description: "Capital of Karnataka" },
+          { y: 30.45, x: 76.47, name: "Chandigarh", description: "Union Territory" },
+          { y: 13.05, x: 80.16, name: "Chennai (Madras)", description: "Capital of Tamil Nadu" },
+          { y: 27.29, x: 95.00, name: "Dibrugarh", description: "A popular city in Assam" },
+          { y: 27.20, x: 88.37, name: "Gangtok", description: "Capital of Sikkim" },
+          { y: 26.11, x: 91.44, name: "Guwahati", description: "A popular city in Assam" },
+          { y: 17.22, x: 78.29, name: "Hyderabad", description: "Capital of Andhra Pradesh" },
+          { y: 26.56, x: 75.49, name: "Jaipur", description: "Capital of Rajasthan" },
+          { y: 23.03, x: 70.11, name: "Kandla", description: "A popular tourist spot in Maharastra" },
+          { y: 26.28, x: 80.20, name: "Kanpur", description: "A popular city in Uttar Pradesh" },
+          { y: 09.58, x: 76.17, name: "Kochi", description: "Capital of Kerala" },
+          { y: 22.34, x: 88.22, name: "Kolkata (Calcutta)", description: "Capital of West Bengal" },
+          { y: 25.19, x: 79.38, name: "Kulpahar", description: "A popular city in Uttar Pradesh" },
+          { y: 26.51, x: 80.57, name: "Lucknow", description: "Capital of Uttar Pradesh" },
+          { y: 30.55, x: 75.51, name: "Ludhiana", description: "A popular city in Punjab" },
+          { y: 18.59, x: 72.50, name: "Mumbai (Bombay)", description: "Capital of Maharashtra" },
+          { y: 21.08, x: 79.05, name: "Nagpur", description: "A popular city in Maharashtra" },
+          { y: 28.37, x: 77.13, name: "New Delhi", description: "Capital of Delhi" },
+          { y: 25.37, x: 85.09, name: "Patna", description: "Capital of Bihar" },
+          { y: 11.40, x: 92.46, name: "Port Blair", description: "Capital of Andaman and Nicobar Islands" },
+          { y: 18.31, x: 73.51, name: "Pune", description: "A popular city in Maharashtra" },
+          { y: 25.34, x: 91.53, name: "Shillong", description: "Capital of Meghalaya" },
+          { y: 31.06, x: 77.10, name: "Shimla", description: "Capital of Himachal Pradesh" },
+          { y: 26.43, x: 88.26, name: "Siliguri", description: "A popular city in West Bengal" },
+          { y: 34.05, x: 74.47, name: "Srinagar", description: "Capital of Jammu and Kashmir" },
+          { y: 21.10, x: 72.50, name: "Surat", description: "A popular city in Gujarat" },
+          { y: 26.38, x: 92.48, name: "Tezpur", description: "Capital of Assam" },
+          { y: 08.29, x: 76.57, name: "Trivandrum", description: "A popular city in Kerala" },
+          { y: 17.41, x: 83.13, name: "Visakhapatnam", description: "A popular city in Andhra Pradesh" }
+      ];
+      Array.prototype.sortOn = function (key) {
+          this.sort(function (a, b) {
+              if (a[key] < b[key]) {
+                  return -1;
+              } else if (a[key] > b[key]) {
+                  return 1;
+              }
+              return 0;
+          });
+      }
 
-			alpha = calcAlpha(x, y, blX, blY, brX, brY, ceX, ceY);
-			beta = calcBeta(x, y, blX, blY, brX, brY, ceX, ceY);
-			gamma = 1 - alpha - beta;
-			if (alpha >= 0 && beta >= 0 && gamma >= 0)
-				r = true;
-			return r;
-		}
-		function calcAlpha(px, py, p1x, p1y, p2x, p2y, p3x, p3y) {
-			return ((p2y - p3y) * (px - p3x) + (p3x - p2x) * (py - p3y)) / ((p2y - p3y) * (p1x - p3x) + (p3x - p2x) * (p1y - p3y));
-		}
-		function calcBeta(px, py, p1x, p1y, p2x, p2y, p3x, p3y) {
-			return ((p3y - p1y) * (px - p3x) + (p1x - p3x) * (py - p3y)) / ((p2y - p3y) * (p1x - p3x) + (p3x - p2x) * (p1y - p3y));
-		}
-		function draw() {
-			for (i = 0; i < data.length; i++) {
-				findMinMax(data[i].x, data[i].y);
-			}
-			drawRect(minX - 5, minY - 5, maxX + 10, maxY + 10);
-			for (i = 0; i < data.length; i++) {
-				drawLine(data[i].x, data[i].y);
-			}
-		}
-		window.onload = draw();
+      function findMinMax(x, y) {
+          if (minX > x) minX = x - 1;
+          else if (maxX < x) maxX = x + 1;
+          if (minY > y) minY = y - 1;
+          else if (maxY < y) maxY = y + 1;
+      }
+      function drawRect(x1, y1, x2, y2) {
+          var rectangle = new Rectangle(new Point(x1, y1), new Point(x2, y2));
+          var p = new Path.Rectangle(rectangle);
+          p.selected = true;
+      }
+      function markCircle(x, y) {
+          var myCircle = new Path.Circle(new Point(x, y), 1);
+          var newElement = {};
+          newElement['x'] = x;
+          newElement['y'] = y;
+          if (ifInsideRightTriangle(x, y)) {
+              myCircle.fillColor = "red";
+              dataRight.push(newElement);
+          } else if (ifInsideLeftTriangle(x, y)) {
+              myCircle.fillColor = "blue";
+              dataLeft.push(newElement);
+          } else if (ifInsideBottomTriangle(x, y)) {
+              myCircle.fillColor = "green";
+              dataBottom.push(newElement);
+          } else {
+              myCircle.fillColor = "magenta";
+              dataTop.push(newElement);
+          }
+      }
+      function drawRightLine(x, y) {
+          var path = new Path();
+          path.strokeColor = 'black';
+          path.moveTo(new Point(x, y));
+          path.lineTo(new Point(maxX + 20, minY + rOffset));
+          drawRect(maxX + 20, minY + rOffset, maxX + 50, minY + rOffset);
+          rOffset = rOffset + 5;
+      }
+      function drawLeftLine(x, y) {
+          var path = new Path();
+          path.strokeColor = 'black';
+          path.moveTo(new Point(x, y));
+          path.lineTo(new Point(minX - 20, minY + lOffset));
+          drawRect(minX - 20, minY + lOffset, minX - 50, minY + lOffset);
+          lOffset = lOffset + 5;
+      }
+      function drawBottomLine(x, y) {
+          var path = new Path();
+          path.strokeColor = 'black';
+          path.moveTo(new Point(x, y));
+          path.lineTo(new Point(minX + bOffset, maxY + 20));
+          drawRect(minX + bOffset, maxY + 20, minX + bOffset, maxY + 50);
+          bOffset = bOffset + 5;
+      }
+      function drawTopLine(x, y) {
+          var path = new Path();
+          path.strokeColor = 'black';
+          path.moveTo(new Point(x, y));
+          path.lineTo(new Point(minX + tOffset, minY - 20));
+          drawRect(minX + tOffset, minY - 20, minX + tOffset, minY - 50);
+          tOffset = tOffset + 5;
+      }
+
+
+      function ifInsideRightTriangle(x, y) {
+          r = false;
+          trX = maxX; trY = minY; /*p1 - top right*/
+          brX = maxX; brY = maxY; /*p2 - bottom right*/
+          ceX = (minX + maxX) / 2; ceY = (minY + maxY) / 2; /*p3 - center point*/
+
+          alpha = calcAlpha(x, y, trX, trY, brX, brY, ceX, ceY);
+          beta = calcBeta(x, y, trX, trY, brX, brY, ceX, ceY);
+          gamma = 1 - alpha - beta;
+          if (alpha >= 0 && beta >= 0 && gamma >= 0)
+              r = true;
+          return r;
+      }
+      function ifInsideLeftTriangle(x, y) {
+          r = false;
+          tlX = minX; tlY = minY;
+          blX = minX; blY = maxY;
+          ceX = (minX + maxX) / 2; ceY = (minY + maxY) / 2; /*p3 - center point*/
+
+          alpha = calcAlpha(x, y, tlX, tlY, blX, blY, ceX, ceY);
+          beta = calcBeta(x, y, tlX, tlY, blX, blY, ceX, ceY);
+          gamma = 1 - alpha - beta;
+          if (alpha >= 0 && beta >= 0 && gamma >= 0)
+              r = true;
+          return r;
+      }
+      function ifInsideBottomTriangle(x, y) {
+          r = false;
+          blX = minX; blY = maxY;
+          brX = maxX; brY = maxY;
+          ceX = (minX + maxX) / 2; ceY = (minY + maxY) / 2; /*p3 - center point*/
+
+          alpha = calcAlpha(x, y, blX, blY, brX, brY, ceX, ceY);
+          beta = calcBeta(x, y, blX, blY, brX, brY, ceX, ceY);
+          gamma = 1 - alpha - beta;
+          if (alpha >= 0 && beta >= 0 && gamma >= 0)
+              r = true;
+          return r;
+      }
+      function calcAlpha(px, py, p1x, p1y, p2x, p2y, p3x, p3y) {
+          return ((p2y - p3y) * (px - p3x) + (p3x - p2x) * (py - p3y)) / ((p2y - p3y) * (p1x - p3x) + (p3x - p2x) * (p1y - p3y));
+      }
+      function calcBeta(px, py, p1x, p1y, p2x, p2y, p3x, p3y) {
+          return ((p3y - p1y) * (px - p3x) + (p1x - p3x) * (py - p3y)) / ((p2y - p3y) * (p1x - p3x) + (p3x - p2x) * (p1y - p3y));
+      }
+      function drawSorted(dataArray, parameter, func) {
+          dataArray.sortOn(parameter);
+          runLoopForFunction(dataArray, func);
+      }
+      function runLoopForFunction(dataElement, funcName) {
+          for (i = 0; i < dataElement.length; i++) {
+              funcName(dataElement[i].x, dataElement[i].y);
+          }
+      }
+      function draw() {
+          runLoopForFunction(data, findMinMax);
+          drawRect(minX - 5, minY - 5, maxX + 10, maxY + 10);
+          runLoopForFunction(data, markCircle);
+
+          drawSorted(dataRight, "y", drawRightLine);
+          drawSorted(dataLeft, "y", drawLeftLine);
+          drawSorted(dataBottom, "x", drawBottomLine);
+          drawSorted(dataTop, "x", drawTopLine);
+      }
+      window.onload = draw();
 		</script>
 	</head>
 	<body style="margin: 0px;">
