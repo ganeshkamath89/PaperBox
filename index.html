@@ -7,8 +7,8 @@
   	lOffset = 0;
   	bOffset = 0;
   	tOffset = 0;
-  	minX = 100;
-  	minY = 100;
+  	minX = 1500;
+  	minY = 1500;
   	maxX = 0;
   	maxY = 0;
 
@@ -73,17 +73,14 @@
   			segments: [[x1, y1], [x1, y2], [x2, y2], [x2, y1], [x1, y1]]
   		});
   		myPath.strokeColor = 'Orange';
-  		var c = document.getElementById("myCanvas");
-  		var ctx = c.getContext("2d");
-
-  		ctx.font = "20px Georgia";
-  		ctx.fillText("Hello World!", x1, y1);
   	}
-  	function markCircle(x, y) {
+  	function markCircle(x, y, name, description) {
   		var myCircle = new Path.Circle(new Point(x, y), 1);
   		var newElement = {};
   		newElement['x'] = x;
   		newElement['y'] = y;
+  		newElement['name'] = name;
+  		newElement['description'] = description;
   		if (ifInsideRightTriangle(x, y)) {
   			myCircle.fillColor = "red";
   			dataRight.push(newElement);
@@ -98,36 +95,66 @@
   			dataTop.push(newElement);
   		}
   	}
-  	function drawRightLine(x, y) {
+  	function drawRightLine(x, y, name, description) {
   		var path = new Path();
   		path.strokeColor = 'black';
   		path.moveTo(new Point(x, y));
   		path.lineTo(new Point(maxX + 20, minY + rOffset));
-  		drawRect(maxX + 20, minY + rOffset, maxX + 50, minY + rOffset + 3);
+  		drawRect(maxX + 20, minY + rOffset, maxX + 60, minY + rOffset + 3);
+
+  		var text = new PointText(new Point(maxX + 20 + 3, minY + rOffset + 3));
+  		text.justification = 'left';
+  		text.fillColor = 'black';
+  		text.fontSize = "4px";
+  		text.content = name;
+
   		rOffset = rOffset + 5;
   	}
-  	function drawLeftLine(x, y) {
+  	function drawLeftLine(x, y, name, description) {
   		var path = new Path();
   		path.strokeColor = 'black';
   		path.moveTo(new Point(x, y));
   		path.lineTo(new Point(minX - 20, minY + lOffset));
-  		drawRect(minX - 20, minY + lOffset, minX - 50, minY + lOffset + 3);
+  		drawRect(minX - 20, minY + lOffset, minX - 60, minY + lOffset + 3);
+
+  		var text = new PointText(new Point(minX - 20 - 3, minY + lOffset + 3));
+  		text.justification = 'right';
+  		text.fillColor = 'black';
+  		text.fontSize = "4px";
+  		text.content = name;
+
   		lOffset = lOffset + 5;
   	}
-  	function drawBottomLine(x, y) {
+  	function drawBottomLine(x, y, name, description) {
   		var path = new Path();
   		path.strokeColor = 'black';
   		path.moveTo(new Point(x, y));
   		path.lineTo(new Point(minX + bOffset, maxY + 20));
-  		drawRect(minX + bOffset, maxY + 20, minX + bOffset + 3, maxY + 50);
+  		drawRect(minX + bOffset, maxY + 20, minX + bOffset + 3, maxY + 60);
+
+  		var text = new PointText(new Point(minX + bOffset - 6, maxY + 20 + 10));
+  		text.justification = 'left';
+  		text.fillColor = 'black';
+  		text.fontSize = "4px";
+  		text.content = name;
+  		text.rotate(270);
+
   		bOffset = bOffset + 5;
   	}
-  	function drawTopLine(x, y) {
+  	function drawTopLine(x, y, name, description) {
   		var path = new Path();
   		path.strokeColor = 'black';
   		path.moveTo(new Point(x, y));
   		path.lineTo(new Point(minX + tOffset, minY - 20));
-  		drawRect(minX + tOffset, minY - 20, minX + tOffset + 3, minY - 50);
+  		drawRect(minX + tOffset, minY - 20, minX + tOffset + 3, minY - 60);
+
+  		var text = new PointText(new Point(minX + tOffset - 6, minY - 20 - 10));
+  		text.justification = 'left';
+  		text.fillColor = 'black';
+  		text.fontSize = "4px";
+  		text.content = name;
+  		text.rotate(90);
+
   		tOffset = tOffset + 5;
   	}
   	function ifInsideRightTriangle(x, y) {
@@ -177,7 +204,9 @@
   	}
   	function drawSorted(dataArray, parameter, func) {
   		dataArray.sortOn(parameter);
-  		runLoopForFunction(dataArray, func);
+  		for (i = 0; i < dataArray.length; i++) {
+  			func(dataArray[i].x, dataArray[i].y, dataArray[i].name, dataArray[i].description);
+  		}
   	}
   	function runLoopForFunction(dataElement, funcName) {
   		for (i = 0; i < dataElement.length; i++) {
@@ -185,13 +214,19 @@
   		}
   	}
   	function draw() {
+  		var c = document.getElementById("myCanvas");
+  		var ctx = c.getContext("2d");
+  		ctx.font = "1px Georgia";
   		for (i = 0; i < data.length; i++) {//adding 50 unit offset to enable display
-  			data[i].y += 50;
-		}
-		runLoopForFunction(data, findMinMax);
+  			data[i].y += 60;
+  			ctx.strokeText("Hello World!", data[i].x, data[i].y);
+  		}
+  		runLoopForFunction(data, findMinMax);
   		drawRect(minX - 5, minY - 5, maxX + 10, maxY + 10);
-  		runLoopForFunction(data, markCircle);
 
+  		for (i = 0; i < data.length; i++) {
+  			markCircle(data[i].x, data[i].y, data[i].name, data[i].description);
+  		}
   		drawSorted(dataRight, "y", drawRightLine);
   		drawSorted(dataLeft, "y", drawLeftLine);
   		drawSorted(dataBottom, "x", drawBottomLine);
