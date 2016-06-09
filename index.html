@@ -132,8 +132,8 @@
   		path.lineTo(new Point(minX + bOffset, maxY + 20));
   		drawRect(minX + bOffset, maxY + 20, minX + bOffset + 3, maxY + 60);
 
-  		var text = new PointText(new Point(minX + bOffset - 6, maxY + 20 + 10));
-  		text.justification = 'left';
+  		var text = new PointText(new Point(minX + bOffset +1.5, maxY + 40));
+  		text.justification = 'center';
   		text.fillColor = 'black';
   		text.fontSize = "4px";
   		text.content = name;
@@ -148,12 +148,12 @@
   		path.lineTo(new Point(minX + tOffset, minY - 20));
   		drawRect(minX + tOffset, minY - 20, minX + tOffset + 3, minY - 60);
 
-  		var text = new PointText(new Point(minX + tOffset - 6, minY - 20 - 10));
-  		text.justification = 'left';
+  		var text = new PointText(new Point(minX + tOffset + 1.5, minY - 40));
+  		text.justification = 'center';
   		text.fillColor = 'black';
   		text.fontSize = "4px";
   		text.content = name;
-  		text.rotate(90);
+  		text.rotate(270);
 
   		tOffset = tOffset + 5;
   	}
