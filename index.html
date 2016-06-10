@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<script type="text/javascript" src="paper-full.js"></script>
-		<script type="text/paperscript" canvas="myCanvas">
-		yOffset = 80;
-		
+<head>
+	<script type="text/javascript" src="paper-full.js"></script>
+	<script type="text/paperscript" canvas="myCanvas">
+	yOffset = 90;
+	
 	rOffset = 0;
 	lOffset = 0;
 	bOffset = 0;
@@ -98,153 +98,28 @@
 			dataTop.push(newElement);
 		}
 	}
-	function drawRightLine(x, y, name, description) {
-		var path = new Path();
-		path.strokeColor = 'black';
-		path.moveTo(new Point(x, y));
-		corner1 = maxX + 20;
-		corner2 = minY + rOffset;
-		corner3 = maxX + yOffset;
-		corner4 = corner2 + 3;
-		
-		path.lineTo(new Point(corner1, corner2));
-		drawRect(corner1, corner2, corner3, corner4, "orange");
-	
-		var text = new PointText(new Point(corner1 + 3, corner4));
-		text.justification = 'left';
-		text.fillColor = 'black';
-		text.fontSize = "4px";
-		text.content = name;
-		
-		drawRect(corner1, corner2 + 5, corner3, corner4 + 5, "yellow");
-		var text = new PointText(new Point(corner1 + 3, corner4 + 5 ));
-		text.justification = 'left';
-		text.fillColor = 'black';
-		text.fontSize = "3px";
-		text.content = description;
-	
-		rOffset = rOffset + 15;
-	}
-	function drawLeftLine(x, y, name, description) {
-		var path = new Path();
-		path.strokeColor = 'black';
-		path.moveTo(new Point(x, y));
-		corner1 = minX - 20;
-		corner2 = minY + lOffset;
-		corner3 = minX - yOffset;
-		corner4 = corner2 + 3;
-		
-		path.lineTo(new Point(corner1, corner2));
-		drawRect(corner1, corner2, corner3, corner4, "orange");
-	
-		var text = new PointText(new Point(corner1 - 3, corner2 + 3));
-		text.justification = 'right';
-		text.fillColor = 'black';
-		text.fontSize = "4px";
-		text.content = name;
-		
-		drawRect(corner1, corner2 + 5, corner3, corner4 + 5, "yellow");
-		var text = new PointText(new Point(corner1 - 3, corner4 + 5 ));
-		text.justification = 'right';
-		text.fillColor = 'black';
-		text.fontSize = "3px";
-		text.content = description;
-	
-		lOffset = lOffset + 15;
-	}
-	function drawBottomLine(x, y, name, description) {
-		var path = new Path();
-		path.strokeColor = 'black';
-		path.moveTo(new Point(x, y));
-		corner1 = minX + bOffset;
-		corner2 = maxY + 20;
-		corner3 = corner1 + 3;
-		corner4 = maxY + yOffset;
-		
-		path.lineTo(new Point(corner1, corner2));
-		drawRect(corner1, corner2, corner3, corner4, "orange");
-	
-		var text = new PointText(new Point(((corner1 + corner3)/2.0), (corner2 + corner4)/2.0));
-		text.justification = 'center';
-		text.fillColor = 'black';
-		text.fontSize = "4px";
-		text.content = name;
-		text.rotate(270);
-		
-		drawRect(corner1 + 5, corner2, corner3 + 5, corner4, "yellow");
-		var text = new PointText(new Point((corner1 + corner3)/2.0 + 5, (corner2 + corner4)/2.0));
-		text.justification = 'center';
-		text.fillColor = 'black';
-		text.fontSize = "3px";
-		text.content = description;
-		text.rotate(270);
-	
-		bOffset = bOffset + 15;
-	}
-	function drawTopLine(x, y, name, description) {
-		var path = new Path();
-		path.strokeColor = 'black';
-		path.moveTo(new Point(x, y));
-		corner1 = minX + tOffset;
-		corner2 = minY - 20;
-		corner3 = corner1 + 3;
-		corner4 = minY - yOffset;
-		
-		path.lineTo(new Point(corner1, corner2));
-		drawRect(corner1, corner2, corner3, corner4, "orange");
-	
-		var text = new PointText(new Point((corner1 + corner3)/2.0, (corner2 + corner4)/2.0));
-		text.justification = 'center';
-		text.fillColor = 'black';
-		text.fontSize = "4px";
-		text.content = name;
-		text.rotate(270);
-		
-		drawRect(corner1 + 5, corner2, corner3 + 5, corner4, "yellow");
-		var text = new PointText(new Point((corner1 + corner3)/2.0 + 5, (corner2 + corner4)/2.0));
-		text.justification = 'center';
-		text.fillColor = 'black';
-		text.fontSize = "3px";
-		text.content = description;
-		text.rotate(270);
-	
-		tOffset = tOffset + 15;
-	}
 	function ifInsideRightTriangle(x, y) {
-		r = false;
 		trX = maxX; trY = minY; /*p1 - top right*/
 		brX = maxX; brY = maxY; /*p2 - bottom right*/
-		ceX = (minX + maxX) / 2; ceY = (minY + maxY) / 2; /*p3 - center point*/
-	
-		alpha = calcAlpha(x, y, trX, trY, brX, brY, ceX, ceY);
-		beta = calcBeta(x, y, trX, trY, brX, brY, ceX, ceY);
-		gamma = 1 - alpha - beta;
-		if (alpha >= 0 && beta >= 0 && gamma >= 0)
-			r = true;
-		return r;
+		return barycentricCoordinatesMethod(x, y, trX, trY, brX, brY);
 	}
 	function ifInsideLeftTriangle(x, y) {
-		r = false;
-		tlX = minX; tlY = minY;
-		blX = minX; blY = maxY;
-		ceX = (minX + maxX) / 2; ceY = (minY + maxY) / 2; /*p3 - center point*/
-	
-		alpha = calcAlpha(x, y, tlX, tlY, blX, blY, ceX, ceY);
-		beta = calcBeta(x, y, tlX, tlY, blX, blY, ceX, ceY);
-		gamma = 1 - alpha - beta;
-		if (alpha >= 0 && beta >= 0 && gamma >= 0)
-			r = true;
-		return r;
+		tlX = minX; tlY = minY; /*p1 - top left*/
+		blX = minX; blY = maxY; /*p2 - bottom left*/
+		return barycentricCoordinatesMethod(x, y, tlX, tlY, blX, blY);
 	}
 	function ifInsideBottomTriangle(x, y) {
+		blX = minX; blY = maxY; /*p2 - bottom left*/
+		brX = maxX; brY = maxY; /*p2 - bottom right*/
+		return barycentricCoordinatesMethod(x, y, blX, blY, brX, brY);
+	}
+	function barycentricCoordinatesMethod(px, py, p1x, p1y, p2x, p2y){
 		r = false;
-		blX = minX; blY = maxY;
-		brX = maxX; brY = maxY;
-		ceX = (minX + maxX) / 2; ceY = (minY + maxY) / 2; /*p3 - center point*/
-	
-		alpha = calcAlpha(x, y, blX, blY, brX, brY, ceX, ceY);
-		beta = calcBeta(x, y, blX, blY, brX, brY, ceX, ceY);
-		gamma = 1 - alpha - beta;
+		p3x = (minX + maxX) / 2; p3y = (minY + maxY) / 2; /*p3 - center point*/
+		
+		var alpha = calcAlpha(px, py, p1x, p1y, p2x, p2y, p3x, p3y);
+		var beta = calcBeta(px, py, p1x, p1y, p2x, p2y, p3x, p3y);
+		var gamma = 1 - alpha - beta;
 		if (alpha >= 0 && beta >= 0 && gamma >= 0)
 			r = true;
 		return r;
@@ -254,6 +129,65 @@
 	}
 	function calcBeta(px, py, p1x, p1y, p2x, p2y, p3x, p3y) {
 		return ((p3y - p1y) * (px - p3x) + (p1x - p3x) * (py - p3y)) / ((p2y - p3y) * (p1x - p3x) + (p3x - p2x) * (p1y - p3y));
+	}
+	function drawRightLine(x, y, name, description) {
+		corner1 = maxX + 20;
+		corner2 = minY + rOffset;
+		corner3 = maxX + yOffset;
+		corner4 = corner2 + 3;
+		drawLineRectangle(x, y, corner1, corner2, corner3, corner4, 0, 5);
+		TextOrientation(corner1 + 3, corner2 + 3, name, description, "left", 0, 5, 0);
+		rOffset = rOffset + 15;
+	}
+	function drawLeftLine(x, y, name, description) {
+		corner1 = minX - 20;
+		corner2 = minY + lOffset;
+		corner3 = minX - yOffset;
+		corner4 = corner2 + 3;
+		drawLineRectangle(x, y, corner1, corner2, corner3, corner4, 0, 5);
+		TextOrientation(corner1 - 3, corner2 + 3, name, description, "right", 0, 5, 0);
+		lOffset = lOffset + 15;
+	}
+	function drawBottomLine(x, y, name, description) {
+		corner1 = minX + bOffset;
+		corner2 = maxY + 20;
+		corner3 = corner1 + 3;
+		corner4 = maxY + yOffset;
+		drawLineRectangle(x, y, corner1, corner2, corner3, corner4, 5, 0);
+		TextOrientation((corner1 + corner3)/2.0, (corner2 + corner4)/2.0, name, description, "center", 5, 0, 270);
+		bOffset = bOffset + 15;
+	}
+	function drawTopLine(x, y, name, description) {
+		corner1 = minX + tOffset;
+		corner2 = minY - 20;
+		corner3 = corner1 + 3;
+		corner4 = minY - yOffset;
+		drawLineRectangle(x, y, corner1, corner2, corner3, corner4, 5, 0);
+		TextOrientation((corner1 + corner3)/2.0, (corner2 + corner4)/2.0, name, description, "center", 5, 0, 270);
+		tOffset = tOffset + 15;
+	}
+	function drawLineRectangle(x, y, c1, c2, c3, c4, offsetX, offsetY){
+		var path = new Path();
+		path.strokeColor = 'black';
+		path.moveTo(new Point(x, y));
+		path.lineTo(new Point(c1, c2));
+		drawRect(c1, c2, c3, c4, "orange");
+		drawRect(c1 + offsetX, c2 + offsetY, c3 + offsetX, c4 + offsetY, "yellow");
+	}
+	function TextOrientation(c1, c2, name, description, justification, offsetX, offsetY, rotation){
+		var text = new PointText(new Point(c1, c2));
+		text.justification = justification;
+		text.fillColor = 'black';
+		text.fontSize = "4px";
+		text.content = name;
+		text.rotate(rotation);
+		
+		var text = new PointText(new Point(c1 + offsetX, c2 + offsetY ));
+		text.justification = justification;
+		text.fillColor = 'black';
+		text.fontSize = "3px";
+		text.content = description;
+		text.rotate(rotation);
 	}
 	function drawSorted(dataArray, parameter, func) {
 		dataArray.sortOn(parameter);
@@ -267,7 +201,7 @@
 		}
 	}
 	function draw() {
-		for (i = 0; i < data.length; i++) {//adding 50 unit offset to enable display
+		for (i = 0; i < data.length; i++) {//alter co-ordinates to improve plotting
 			data[i].x = data[i].x*4;
 			data[i].y = data[i].y*4 + yOffset;
 		}
@@ -283,9 +217,9 @@
 		drawSorted(dataTop, "x", drawTopLine);
 	}
 	window.onload = draw();
-		</script>
-	</head>
-	<body style="margin: 0px;">
-		<canvas id="myCanvas"  width="1500" height="1000" ></canvas>
-	</body>
+	</script>
+</head>
+<body style="margin: 0px;">
+	<canvas id="myCanvas"  width="1500" height="1000" ></canvas>
+</body>
 </html>
