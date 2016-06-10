@@ -78,7 +78,7 @@
 		myPath.strokeColor = color;
 	}
 	function markCircle(x, y, name, description) {
-		var myCircle = new Path.Circle(new Point(x, y), 1);
+		var myCircle = new Path.Circle(new Point(x, y), 3);
 		var newElement = {};
 		newElement['x'] = x;
 		newElement['y'] = y;
@@ -137,7 +137,7 @@
 		corner4 = corner2 + 3;
 		drawLineRectangle(x, y, corner1, corner2, corner3, corner4, 0, 5);
 		TextOrientation(corner1 + 3, corner2 + 3, name, description, "left", 0, 5, 0);
-		rOffset = rOffset + 15;
+		rOffset = rOffset + 12;
 	}
 	function drawLeftLine(x, y, name, description) {
 		corner1 = minX - 20;
@@ -146,7 +146,7 @@
 		corner4 = corner2 + 3;
 		drawLineRectangle(x, y, corner1, corner2, corner3, corner4, 0, 5);
 		TextOrientation(corner1 - 3, corner2 + 3, name, description, "right", 0, 5, 0);
-		lOffset = lOffset + 15;
+		lOffset = lOffset + 12;
 	}
 	function drawBottomLine(x, y, name, description) {
 		corner1 = minX + bOffset;
@@ -155,7 +155,7 @@
 		corner4 = maxY + yOffset;
 		drawLineRectangle(x, y, corner1, corner2, corner3, corner4, 5, 0);
 		TextOrientation((corner1 + corner3)/2.0, (corner2 + corner4)/2.0, name, description, "center", 5, 0, 270);
-		bOffset = bOffset + 15;
+		bOffset = bOffset + 12;
 	}
 	function drawTopLine(x, y, name, description) {
 		corner1 = minX + tOffset;
@@ -164,7 +164,7 @@
 		corner4 = minY - yOffset;
 		drawLineRectangle(x, y, corner1, corner2, corner3, corner4, 5, 0);
 		TextOrientation((corner1 + corner3)/2.0, (corner2 + corner4)/2.0, name, description, "center", 5, 0, 270);
-		tOffset = tOffset + 15;
+		tOffset = tOffset + 12;
 	}
 	function drawLineRectangle(x, y, c1, c2, c3, c4, offsetX, offsetY){
 		var path = new Path();
