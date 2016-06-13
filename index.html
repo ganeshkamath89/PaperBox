@@ -2,6 +2,7 @@
 <html>
 <head>
 	<script type="text/javascript" src="paper-full.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
 	<script type="text/paperscript" canvas="myCanvas">
 	yOffset = 90;
 	
@@ -175,18 +176,15 @@
 		drawRect(c1 + offsetX, c2 + offsetY, c3 + offsetX, c4 + offsetY, "yellow");
 	}
 	function TextOrientation(c1, c2, name, description, justification, offsetX, offsetY, rotation){
+		formatText(c1, c2, justification, "4px", name, rotation);
+		formatText(c1 + offsetX, c2 + offsetY, justification, "3px", description, rotation);
+	}
+	function formatText(c1, c2, justification, fontsize, content, rotation){
 		var text = new PointText(new Point(c1, c2));
 		text.justification = justification;
 		text.fillColor = 'black';
-		text.fontSize = "4px";
-		text.content = name;
-		text.rotate(rotation);
-		
-		var text = new PointText(new Point(c1 + offsetX, c2 + offsetY ));
-		text.justification = justification;
-		text.fillColor = 'black';
-		text.fontSize = "3px";
-		text.content = description;
+		text.fontSize = fontsize;
+		text.content = content;
 		text.rotate(rotation);
 	}
 	function drawSorted(dataArray, parameter, func) {
@@ -203,11 +201,13 @@
 	function draw() {
 		for (i = 0; i < data.length; i++) {//alter co-ordinates to improve plotting
 			data[i].x = data[i].x*4;
+			data[i].y = yOffset - data[i].y; // Flipping axis to plot map in NS direction
 			data[i].y = data[i].y*4 + yOffset;
 		}
 		runLoopForFunction(data, findMinMax);
+		
 		drawRect(minX - 5, minY - 5, maxX + 10, maxY + 10, "purple");
-	
+		
 		for (i = 0; i < data.length; i++) {
 			markCircle(data[i].x, data[i].y, data[i].name, data[i].description);
 		}
